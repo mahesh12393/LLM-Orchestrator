@@ -62,7 +62,8 @@
 			}
 		},
     "resources": {
-      "js": [{ "uri": "ExtApp/react.js" }]
+      "js": [{ "uri": "ExtApp/react.js" }],
+			"css": [{"uri": "ExtApp/react-flow.css"}]
     },
 		"handleValidation": true,
 		"contentDensities": {

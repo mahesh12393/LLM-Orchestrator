@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import { createLogger, defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import replace from "@rollup/plugin-replace";
@@ -12,7 +13,7 @@ export default ({ mode }) => {
       react(),
       replace({ "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV) }),
     ],
- 
+
     build: isUI5
       ? {
           outDir: "distUI5",
@@ -21,10 +22,10 @@ export default ({ mode }) => {
             entry: "src/UI5.main.jsx",
             name: "react",
             fileName: "react" ,
-            formats: ["umd"]           
+            formats: ["umd"]
           }
         }
       : undefined ,
-   
+
   });
 }

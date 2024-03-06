@@ -1,20 +1,23 @@
-import { useState } from 'react'
+import React from "react";
+import Canvas from "./Canvas";
+import LLMModel from "./Nodes/chatmodels/LLMModel";
+import PromptTemplate from "./Nodes/prompts/PromptTemplate";
 
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+function App({ generateConfig, nodeData }) {
+  nodeData = [new LLMModel(), new PromptTemplate()];
   return (
-    <>
-      <h1>React Couter</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
-  )
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <Canvas nodeData={nodeData} />
+    </div>
+  );
 }
 
-export default App
+// function App({ generateConfig, nodeData }) {
+//   return (
+//     <div style={{ width: "100%", height: "100%" }}>
+//       <Canvas nodeData={nodeData} />
+//     </div>
+//   );
+// }
+
+export default App;
