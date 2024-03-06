@@ -1,1 +1,1 @@
-This project is aimed at integrating a React application within a SAP UI5 application. The React app serves as an orchestration tool for LLMS (Learning Management System), facilitating the creation and management of orchestration flows.
+This project is aimed at integrating a React application within a SAP UI5 application. The React app serves as an orchestration tool for llms, facilitating the creation and management of orchestration flows.
