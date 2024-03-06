@@ -1,11 +1,1 @@
-# UI5 Nest for React
-
-This repository was generated using [generator-ui5-react-nest](https://github.com/aydin-ozcan/generator-ui5-react-nest). To get started, follow the instructions below.
-
-## Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/en/) (version 18 or higher)
-- Install dependencies with `pnpm install`
-- Run the application with `pnpm start:ui5`
+This project is aimed at integrating a React application within a SAP UI5 application. The React app serves as an orchestration tool for LLMS (Learning Management System), facilitating the creation and management of orchestration flows.
