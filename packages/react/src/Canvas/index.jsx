@@ -15,6 +15,11 @@ import AddNodes from "./AddNodes";
 import CanvasNode from "./CanvasNode";
 import dagre from "dagre";
 import { useEffect } from "react";
+import "@ui5/webcomponents-icons/dist/AllIcons.js";
+import { Button, ToolbarSpacer,Icon, Toolbar, Title,Text,ResponsiveGridLayout,
+  Card,Form,FormItem,Input,Label,Switch, FlexBox,Tab,TabContainer,IllustratedMessage, BusyIndicator,
+  ToolbarSeparator, SegmentedButton, SegmentedButtonItem, DynamicPage, DynamicPageTitle} from '@ui5/webcomponents-react';
+import "@ui5/webcomponents-fiori/dist/illustrations/AllIllustrations.js"
 
 const nodeTypes = {
   customNode: CanvasNode,
@@ -557,10 +562,9 @@ const initialNodes = [
       category: "Prompts",
       description: "Schema to represent a basic prompt for an LLM",
       inputs: {
-        template: "Write a {length} story about: {content}",
+        template: "Translate this sentence {userInput} to English",
         promptParameters: {
-          length: false,
-          content: false,
+          userInput: true,
         },
       },
       inputAnchors: [],
@@ -631,6 +635,399 @@ const Canvas = ({ nodeData }) => {
 
   const reactFlowWrapper = useRef(null);
   const { reactFlowInstance, setReactFlowInstance } = useContext(flowContext);
+  const [showTestInference, setShowTestInference]  = useState(false);
+  const [formInputs,setFormInputs] = useState({})
+  const [response,setResponse] = useState(false);
+  const [loading,setIsLoading] = useState(false);
+  const [showTrace,setShowTrace] = useState(true);
+  const [showRawResponse,setShowRawResponse] = useState(true);
+  const [rawResponse,setRawResponse] = useState(false);
+  const [traceResponse,setTraceResponse] = useState(false);
+
+
+
+  let outputResponse = {
+    "id": "chatcmpl-8xzlbIyb6gzI85aIFpYDoLjbgYitq",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "Where can I find the travel expense report?",
+          "role": "assistant",
+          "function_call": null,
+          "tool_calls": null
+        },
+        "content_filter_results": {
+          "hate": {
+            "filtered": false,
+            "severity": "safe"
+          },
+          "self_harm": {
+            "filtered": false,
+            "severity": "safe"
+          },
+          "sexual": {
+            "filtered": false,
+            "severity": "safe"
+          },
+          "violence": {
+            "filtered": false,
+            "severity": "safe"
+          }
+        }
+      }
+    ],
+    "created": 1709309475,
+    "model": "gpt-35-turbo",
+    "object": "chat.completion",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 9,
+      "prompt_tokens": 56,
+      "total_tokens": 65
+    },
+    "prompt_filter_results": [
+      {
+        "content_filter_results": {
+          "hate": {
+            "filtered": false,
+            "severity": "safe"
+          },
+          "jailbreak": {
+            "detected": false,
+            "filtered": false
+          },
+          "self_harm": {
+            "filtered": false,
+            "severity": "safe"
+          },
+          "sexual": {
+            "filtered": false,
+            "severity": "safe"
+          },
+          "violence": {
+            "filtered": false,
+            "severity": "safe"
+          }
+        },
+        "prompt_index": 0
+      }
+    ]
+  };
+  
+  let trace = [
+    {
+      "name": "templating",
+      "wasConfigured": true,
+      "output": [
+        {
+          "role": "system",
+          "content": "Your sole purpose is to translate german to english."
+        },
+        {
+          "role": "user",
+          "content": "Hi, ich habe eine Frage."
+        },
+        {
+          "role": "assistant",
+          "content": "Hi, I have a question."
+        },
+        {
+          "role": "user",
+          "content": "Wo finde ich die Reisekostenabrechnung?"
+        }
+      ]
+    },
+    {
+      "name": "llm",
+      "wasConfigured": true,
+      "output": {
+        "result": {
+          "role": "assistant",
+          "content": "Where can I find the travel expense report?"
+        },
+        "usage": {
+          "inputTokens": 56,
+          "outputTokens": 9,
+          "totalTokens": 65
+        },
+        "finishReason": "stop",
+        "rawResponse": {
+          "id": "chatcmpl-8xzlbIyb6gzI85aIFpYDoLjbgYitq",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "Where can I find the travel expense report?",
+                "role": "assistant",
+                "function_call": null,
+                "tool_calls": null
+              },
+              "content_filter_results": {
+                "hate": {
+                  "filtered": false,
+                  "severity": "safe"
+                },
+                "self_harm": {
+                  "filtered": false,
+                  "severity": "safe"
+                },
+                "sexual": {
+                  "filtered": false,
+                  "severity": "safe"
+                },
+                "violence": {
+                  "filtered": false,
+                  "severity": "safe"
+                }
+              }
+            }
+          ],
+          "created": 1709309475,
+          "model": "gpt-35-turbo",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "usage": {
+            "completion_tokens": 9,
+            "prompt_tokens": 56,
+            "total_tokens": 65
+          },
+          "prompt_filter_results": [
+            {
+              "content_filter_results": {
+                "hate": {
+                  "filtered": false,
+                  "severity": "safe"
+                },
+                "jailbreak": {
+                  "detected": false,
+                  "filtered": false
+                },
+                "self_harm": {
+                  "filtered": false,
+                  "severity": "safe"
+                },
+                "sexual": {
+                  "filtered": false,
+                  "severity": "safe"
+                },
+                "violence": {
+                  "filtered": false,
+                  "severity": "safe"
+                }
+              },
+              "prompt_index": 0
+            }
+          ]
+        }
+      }
+    }
+  ];
+
+  let completeResponse = {
+    "requestId": "6f0b361e-73af-40ac-88e0-9632afb32fcf",
+    "moduleResults": [
+        {
+            "name": "templating",
+            "wasConfigured": true,
+            "output": [
+                {
+                    "role": "system",
+                    "content": "Your sole purpose is to translate german to english."
+                },
+                {
+                    "role": "user",
+                    "content": "Hi, ich habe eine Frage."
+                },
+                {
+                    "role": "assistant",
+                    "content": "Hi, I have a question."
+                },
+                {
+                    "role": "user",
+                    "content": "Wo finde ich die Reisekostenabrechnung?"
+                }
+            ]
+        },
+        {
+            "name": "llm",
+            "wasConfigured": true,
+            "output": {
+                "result": {
+                    "role": "assistant",
+                    "content": "Where can I find the travel expense report?"
+                },
+                "usage": {
+                    "inputTokens": 56,
+                    "outputTokens": 9,
+                    "totalTokens": 65
+                },
+                "finishReason": "stop",
+                "rawResponse": {
+                    "id": "chatcmpl-8xzlbIyb6gzI85aIFpYDoLjbgYitq",
+                    "choices": [
+                        {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                                "content": "Where can I find the travel expense report?",
+                                "role": "assistant",
+                                "function_call": null,
+                                "tool_calls": null
+                            },
+                            "content_filter_results": {
+                                "hate": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                },
+                                "self_harm": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                },
+                                "sexual": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                },
+                                "violence": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                }
+                            }
+                        }
+                    ],
+                    "created": 1709309475,
+                    "model": "gpt-35-turbo",
+                    "object": "chat.completion",
+                    "system_fingerprint": null,
+                    "usage": {
+                        "completion_tokens": 9,
+                        "prompt_tokens": 56,
+                        "total_tokens": 65
+                    },
+                    "prompt_filter_results": [
+                        {
+                            "content_filter_results": {
+                                "hate": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                },
+                                "jailbreak": {
+                                    "detected": false,
+                                    "filtered": false
+                                },
+                                "self_harm": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                },
+                                "sexual": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                },
+                                "violence": {
+                                    "filtered": false,
+                                    "severity": "safe"
+                                }
+                            },
+                            "prompt_index": 0
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "orchestrationResult": {
+        "result": {
+            "role": "assistant",
+            "content": "Where can I find the travel expense report?"
+        },
+        "usage": {
+            "inputTokens": 56,
+            "outputTokens": 9,
+            "totalTokens": 65
+        },
+        "finishReason": "stop",
+        "rawResponse": {
+            "id": "chatcmpl-8xzlbIyb6gzI85aIFpYDoLjbgYitq",
+            "choices": [
+                {
+                    "finish_reason": "stop",
+                    "index": 0,
+                    "logprobs": null,
+                    "message": {
+                        "content": "Where can I find the travel expense report?",
+                        "role": "assistant",
+                        "function_call": null,
+                        "tool_calls": null
+                    },
+                    "content_filter_results": {
+                        "hate": {
+                            "filtered": false,
+                            "severity": "safe"
+                        },
+                        "self_harm": {
+                            "filtered": false,
+                            "severity": "safe"
+                        },
+                        "sexual": {
+                            "filtered": false,
+                            "severity": "safe"
+                        },
+                        "violence": {
+                            "filtered": false,
+                            "severity": "safe"
+                        }
+                    }
+                }
+            ],
+            "created": 1709309475,
+            "model": "gpt-35-turbo",
+            "object": "chat.completion",
+            "system_fingerprint": null,
+            "usage": {
+                "completion_tokens": 9,
+                "prompt_tokens": 56,
+                "total_tokens": 65
+            },
+            "prompt_filter_results": [
+                {
+                    "content_filter_results": {
+                        "hate": {
+                            "filtered": false,
+                            "severity": "safe"
+                        },
+                        "jailbreak": {
+                            "detected": false,
+                            "filtered": false
+                        },
+                        "self_harm": {
+                            "filtered": false,
+                            "severity": "safe"
+                        },
+                        "sexual": {
+                            "filtered": false,
+                            "severity": "safe"
+                        },
+                        "violence": {
+                            "filtered": false,
+                            "severity": "safe"
+                        }
+                    },
+                    "prompt_index": 0
+                }
+            ]
+        }
+    }
+}
+
+//completeResponse?orchestrationResult?rawResponse
+
+
+
 
   const onConnect = useCallback((params) => {
     const newEdge = {
@@ -639,6 +1036,7 @@ const Canvas = ({ nodeData }) => {
       id: `${params.source}-${params.sourceHandle}-${params.target}-${params.targetHandle}`,
     };
 
+    console.log("the params recievd after connecting is ", params)
     const targetNodeId = params.targetHandle.split("-")[0];
     const sourceNodeId = params.sourceHandle.split("-")[0];
     const targetInput = params.targetHandle.split("-")[2];
@@ -686,7 +1084,7 @@ const Canvas = ({ nodeData }) => {
     const llmConfig = {
       modelName: node.data.inputs.model,
       modelParams: node.data.inputs.model_parameters,
-      modelUrl: "",
+      modelUrl: "https://api.ai.intblore.eu-central-1.mlf-aws-dev.com/v2/inference/deployments/d43bdd8a675fc505",
     };
     return llmConfig;
   };
@@ -705,28 +1103,56 @@ const Canvas = ({ nodeData }) => {
   };
 
   const onShowJSONFlow = () => {
-    console.log(nodes);
-    console.log(edges);
-    const orchestrationMapping = {
-      LLMModel: "llmModuleConfig",
-      PromptTemplate: "templatingModuleConfig",
-    };
-    const orchestrationConfig = {
-      moduleConfigurations: {},
-    };
-    for (let index = 0; index < nodes.length; index++) {
-      const node = nodes[index];
-      if (node.data.type === "LLMModel") {
-        orchestrationConfig.moduleConfigurations[
-          orchestrationMapping["LLMModel"]
-        ] = mappingLLMModule(node);
-      } else if (node.data.type === "PromptTemplate") {
-        orchestrationConfig.moduleConfigurations[
-          orchestrationMapping["PromptTemplate"]
-        ] = mappingPromptTemplate(node);
-      }
-    }
-    setOrchestrationJSON(JSON.stringify(orchestrationConfig, null, 2));
+    // console.log(nodes);
+    // console.log(edges);
+    // const orchestrationMapping = {
+    //   LLMModel: "llmModuleConfig",
+    //   PromptTemplate: "templatingModuleConfig",
+    // };
+    // const orchestrationConfig = {
+    //   moduleConfigurations: {},
+    // };
+    // for (let index = 0; index < nodes.length; index++) {
+    //   const node = nodes[index];
+    //   if (node.data.type === "LLMModel") {
+    //     orchestrationConfig.moduleConfigurations[
+    //       orchestrationMapping["LLMModel"]
+    //     ] = mappingLLMModule(node);
+    //   } else if (node.data.type === "PromptTemplate") {
+    //     orchestrationConfig.moduleConfigurations[
+    //       orchestrationMapping["PromptTemplate"]
+    //     ] = mappingPromptTemplate(node);
+    //   }
+    // }
+    // setOrchestrationJSON(JSON.stringify(orchestrationConfig, null, 2));
+
+
+    // "moduleConfigurations": {
+    //   "llmModuleConfig": {
+    //     "modelName": "d1a52a0a60bd5f6a",
+    //     "modelParams": {
+    //       "frequency_penalty": "2",
+    //       "presence_penalty": "0.25",
+    //       "max_tokens": "920",
+    //       "temperature": "2"
+    //     },
+    //     "modelUrl": ""
+    //   },
+    //   "templatingModuleConfig": {
+    //     "template": "Write a {length} story about: {content}",
+    //     "parameterSchema": {
+    //       "length": {
+    //         "isRequired": false
+    //       },
+    //       "content": {
+    //         "isRequired": false
+    //       }
+    //     }
+    //   }
+    // }
+
+
+
     setShowJSONFlow(true);
   };
 
@@ -820,9 +1246,281 @@ const Canvas = ({ nodeData }) => {
     [reactFlowInstance]
   );
 
+const getInputVariables = (()=>{
+ let obtainedJSON = JSON.parse(orchestrationJSON);
+  console.log("the orcjhestration json generated is ", orchestrationJSON[1]);
+  const schema = obtainedJSON["moduleConfigurations"]["templatingModuleConfig"]["parameterSchema"];
+  console.log("the orcjhestration json generated schema is ", schema);
+  
+  // ["templatingModuleConfig"];
+  const extractedData = Object.entries(schema).map(([key, value]) => ({
+    name: key,
+    isRequired: value.isRequired,
+  }));
+
+  console.log("extracted data os ", extractedData);
+
+  setFormInputs(extractedData.reduce((acc, field) => {
+    acc[field.name] = { value: '', isRequired: field.isRequired }; // Object structure for each field
+    return acc;
+  }, {}));
+})
+
+const handleSubmitForm = (event) => {
+  // Access all field values from formData
+  const fieldValues = Object.values(formInputs).map((fieldData) => fieldData.value);
+  console.log("Field Values:", fieldValues);
+  console.log("current value of form is ", formInputs)
+
+  event.preventDefault();
+  setIsLoading(true)
+  console.log("loading is made turu");
+  // setResult('Generating Result...'); // Simulate some processing
+
+  setTimeout(() => {
+    console.log("inisfe this timeout");
+    setResponse(true);
+    setRawResponse(true);
+    setTraceResponse(true);
+    setIsLoading(false);
+  }, 3500);
+};
+
+
+const handleChange = (event) => {
+  console.log("event recieved is ", event.target);
+  const { id, value } = event.target;
+  console.log("calues obtained are ", name, value);
+  setFormInputs({ ...formInputs, [id]: { ...formInputs[id], value } }); // Update nested object
+  console.log("form inputs updated are ", formInputs);
+};
+
+function TraceResponse () {
+  if(!traceResponse){
+    return <></>
+  }
+  const TraceResponse = JSON.stringify(trace, null, 4)
+  return <pre>{TraceResponse}</pre>
+}
+function OutputRawResponse () {
+  // const RawResponse = JSON.stringify(outputResponse, null, 4)
+
+  if(!rawResponse) {
+    return <></>;
+  }
+
+  const RawResponse = JSON.stringify(completeResponse?.orchestrationResult?.rawResponse, null,4);
+  return <pre>{RawResponse}</pre>
+}
+function OutputResponse () {
+  if(loading) {
+    return <BusyIndicator active></BusyIndicator>
+  }
+  if (response){
+    const outputMessage = outputResponse["choices"][0]["message"]["content"];
+    return <pre>{outputMessage}</pre>
+  }
+  else {
+    return (
+    <FlexBox style={{ alignItems:"end"}}>
+    <IllustratedMessage name="EmptyList" size="scene" />
+    
+      {/* <IllustratedMessage name="NoEntries" />  */}
+      </FlexBox>
+    );
+  
+  }
+  
+}
+
+
+function downloadJSON(data) {
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'data.json'; // Replace with your desired filename
+  link.click();
+  URL.revokeObjectURL(url); // Revoke the temporary URL
+}
+
+
+  useEffect(()=>{
+    const orchestrationMapping = {
+      LLMModel: "llmModuleConfig",
+      PromptTemplate: "templatingModuleConfig",
+    };
+    const orchestrationConfig = {
+      moduleConfigurations: {},
+    };
+    for (let index = 0; index < nodes.length; index++) {
+      const node = nodes[index];
+      if (node.data.type === "LLMModel") {
+        orchestrationConfig.moduleConfigurations[
+          orchestrationMapping["LLMModel"]
+        ] = mappingLLMModule(node);
+      } else if (node.data.type === "PromptTemplate") {
+        orchestrationConfig.moduleConfigurations[
+          orchestrationMapping["PromptTemplate"]
+        ] = mappingPromptTemplate(node);
+      }
+    }
+    setOrchestrationJSON(JSON.stringify(orchestrationConfig, null, 2));
+    // getInputVariables();
+  },[formInputs])
+
+
+
   return (
-    <div style={{ pt: "70px", height: "100%", width: "100%" }}>
-      {showJSONFlow && (
+    <>
+    {showTestInference && <>
+      <ResponsiveGridLayout
+    columnsL={2}
+    columnsM={2}
+    columnsS={2}
+    columnsXL={2}
+>
+  <React.Fragment key=".0">
+    <FlexBox
+      className="responsiveGridLayoutItem"
+      style={{
+        // background: 'var(--sapAccentColor1)',
+        // gridColumn: 'span 1',
+        // height:'100%',
+        width:"43vw",
+        height:"95vh",
+        padding:"0.25rem"
+      }}
+    >
+      <Card header={<Toolbar
+        design="Auto"
+        onClick={function _a(){}}
+        onOverflowChange={function _a(){}}
+        toolbarStyle="Standard"
+        // style={{height:"100vh"}}
+      >
+        <Button icon="nav-back" onClick={()=>{
+           setShowTestInference(false);
+        }}></Button>
+        <Title>
+        Test Inference
+        </Title>
+        {/* <ToolbarSpacer />    */}
+        <ToolbarSpacer />
+        <Button design="Emphasized" onClick={(e)=>{
+          handleSubmitForm(e)
+        }}>Submit</Button>
+        
+      </Toolbar>
+}>
+
+    <Form backgroundDesign="Transparent" style={{alignItems:'center'}}>
+
+    {/* <FormItem label="Sole Form Item">
+        <Input type="Text" />
+      </FormItem> */}
+
+      {formInputs &&
+            Object.keys(formInputs).map((field) => (
+              <FormItem label={<Label required={formInputs[field].isRequired}>{field}</Label>} key={field} >
+                <Input id={field} type="Text" onInput={(e)=>handleChange(e)}></Input>
+
+              </FormItem>
+              // <div key={field}>
+              //   <label className={formInputs[field].isRequired? "required" : "optional"} htmlFor={field}>{field}:</label>
+              //   <input
+              //     type="text" // Adjust type as needed
+              //     id={field}
+              //     name={field}
+              //     value={formInputs[field].value}
+              //     onChange={(e)=>handleChange(e)}
+              //   />
+              //   </div>
+            ))}
+          <FormItem label={<Label>Show Raw Response</Label>}>
+              <Switch onChange={(e)=>{
+                // console.log("event recieved is ", e);
+                setShowRawResponse(!showRawResponse);
+              }}></Switch>
+              
+              </FormItem>
+
+
+            <FormItem label={<Label>Show Trace</Label>}>
+              <Switch onChange={(e)=>{
+                // console.log("event recieved is ", e);
+                setShowTrace(!showTrace);
+              }}></Switch>
+              
+              </FormItem>
+            
+    </Form>
+
+      </Card>
+      
+    </FlexBox>
+    <FlexBox
+      // className="responsiveGridLayoutItem"
+      style={{
+        // background: 'var(--sapAccentColor2)',
+        // gridColumn: 'span 1'
+        width:"43vw",
+        marginLeft:"-6rem",
+        padding:"0.25rem",
+        // height:"90vh"
+      }}
+    >
+     <Card >
+              <TabContainer
+            contentBackgroundDesign="Transparent"
+            headerBackgroundDesign="Solid"
+            onTabSelect={function _a(){}}
+            // tabLayout="Standard"
+          >
+            <Tab 
+            style={{
+  // overflowY: "auto",
+  height: "85vh"
+}}
+              selected
+              text="Response"
+            >
+              <OutputResponse/>
+            </Tab>
+            <Tab
+             disabled={showRawResponse}
+            style={{
+              overflowY: "auto",
+              height: "85vh"
+            }}
+              text="Raw Response"
+            >
+              <OutputRawResponse/>
+            </Tab>
+            <Tab
+            disabled={showTrace}
+              text="Trace"
+              style={{
+                overflowY: "auto",
+                height: "85vh"
+              }}
+            >
+              <TraceResponse/>
+            </Tab>
+          </TabContainer>
+
+     </Card>
+      
+    </FlexBox>
+
+
+    </React.Fragment>
+    </ResponsiveGridLayout>
+    </>
+    }
+    {!showTestInference && 
+    <div style={{ pt: "100px", height: "100%", width: "100%" }}>
+      {/* {showJSONFlow && (
         <div
           style={{
             position: "absolute",
@@ -838,7 +1536,7 @@ const Canvas = ({ nodeData }) => {
             zIndex: 1500,
           }}
         ></div>
-      )}
+      )} */}
       {showJSONFlow && (
         <div
           style={{
@@ -849,28 +1547,73 @@ const Canvas = ({ nodeData }) => {
             margin: "auto",
             position: "absolute",
             zIndex: 2000,
-            width: "80%",
+            width: "100%",
             boxShadow:
               "0 14px 28px rgba(0,0,0,0.05), 0 10px 10px rgba(0,0,0,0.05)",
             backgroundColor: "white",
             border: "1px solid #f0f0f0",
-            padding: 36,
-            borderRadius: "8px",
-            height: "80%",
+            padding: 10,
+            // borderRadius: "4px",
+            height: "85%",
           }}
         >
-          <button onClick={() => setShowJSONFlow(false)}>Close</button>
+          {/* <button onClick={() => setShowJSONFlow(false)}>Close</button> */}
           <pre>{orchestrationJSON}</pre>
         </div>
       )}
 
-      <button
-        style={{ position: "absolute", right: 10, top: 10, zIndex: 1000 }}
-        onClick={onShowJSONFlow}
+    {/* <DynamicPage
+    headerTitle={<DynamicPageTitle actions={<>
+    <Button design="Emphasized">Edit</Button>
+    <Button design="Transparent">Delete</Button>
+    <Button design="Transparent">Copy</Button>
+    <Button design="Transparent" icon="action"/>
+    </>} 
+    header={<Title>d520923103491c4a</Title>} 
+     >
+      </DynamicPageTitle>
+      }
+
+    >
+
+    </DynamicPage> */}
+
+
+
+      <Toolbar
+        design="Auto"
+        onClick={function _a(){}}
+        onOverflowChange={function _a(){}}
+        toolbarStyle="Standard"
       >
-        Show JSON
-      </button>
-      <div className="reactflow-parent-wrapper">
+        <Title>
+        d520923103491c4a
+        </Title>
+        {/* <ToolbarSpacer />    */}
+        <FlexBox>
+        <SegmentedButton>
+            <React.Fragment key=".0">
+              <SegmentedButtonItem pressed onClick={()=>{
+          setShowJSONFlow(false)
+        }}>
+                  Graph
+              </SegmentedButtonItem>
+            <SegmentedButtonItem onClick={onShowJSONFlow}>
+              Config
+            </SegmentedButtonItem>
+            </React.Fragment>
+          </SegmentedButton>
+        <ToolbarSeparator />
+        <Button design="Emphasized" onClick={()=>{
+          setShowTestInference(true);
+          getInputVariables();
+        }}>Test</Button>
+        <Button style={{marginRight:"1rem"}} icon="download" onClick={()=>{
+          downloadJSON(orchestrationJSON);
+        }}></Button>
+        </FlexBox>
+      </Toolbar>
+      {!showJSONFlow && <div className="reactflow-parent-wrapper">
         <div className="reactflow-wrapper" ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}
@@ -898,8 +1641,12 @@ const Canvas = ({ nodeData }) => {
             <AddNodes nodesData={nodeData} />
           </ReactFlow>
         </div>
-      </div>
+      </div>}
+      
     </div>
+}
+    </>
+    
   );
 };
 

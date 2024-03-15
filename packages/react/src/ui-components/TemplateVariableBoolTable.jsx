@@ -2,6 +2,8 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { Button } from "@ui5/webcomponents-react";
+import "@ui5/webcomponents-icons/dist/AllIcons.js";
 const TemplateVariableBoolTable = ({
   show,
   onCancel,
@@ -67,19 +69,19 @@ const TemplateVariableBoolTable = ({
             height: "50%",
           }}
         >
-          <button onClick={onClose}>Close</button>
+          <Button design="Negative"  onClick={onClose} icon="decline"></Button>
           <div>
             {Object.keys(variables).map((v, i) => {
               return (
                 <div key={i}>
                   {v} : {variables[v] ? "Required" : "Not Required"}{" "}
-                  <button
+                  <Button design="Emphasized"
                     onClick={() => {
                       toggleVariableRequired(v);
                     }}
                   >
                     Toggle
-                  </button>
+                  </Button>
                 </div>
               );
             })}

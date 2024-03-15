@@ -48,6 +48,9 @@ export const ReactFlowContext = ({ children }) => {
       const targetNodeId = edge.target;
       const sourceNodeId = edge.source;
       const targetInput = edge.targetHandle.split("-")[2];
+      console.log("type of react flow instance izz ",typeof(reactFlowInstance));
+
+
 
       reactFlowInstance.setNodes((nds) =>
         nds.map((node) => {
@@ -172,6 +175,7 @@ export const ReactFlowContext = ({ children }) => {
       }}
     >
       {children}
+      
     </flowContext.Provider>
   );
 };

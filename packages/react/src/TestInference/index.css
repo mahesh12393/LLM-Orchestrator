@@ -1,0 +1,17 @@
+.container {
+    display: flex; /* Make columns display side-by-side */
+  }
+  
+  .column {
+    flex: 1; /* Make columns share available space equally */
+    padding: 1rem; /* Add some padding for better separation */
+  }
+  
+  .left {
+    /* Customize styles for the left column, e.g., background color */
+  }
+  
+  .right {
+    /* Customize styles for the right column, e.g., background color */
+  }
+  

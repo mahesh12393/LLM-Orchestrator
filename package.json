@@ -2,7 +2,6 @@
   "name": "ui5nest",
   "version": "1.0.0",
   "description": "Monorepo of UI5 Nest for React",
- 
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:ui5": "pnpm run build:react:ui5 && pnpm run build:ui5:pre && pnpm --filter helloworld start",
@@ -16,7 +15,14 @@
   "devDependencies": {
     "shx": "^0.3.4"
   },
-  "keywords": ["ui5", "react"],
+  "keywords": [
+    "ui5",
+    "react"
+  ],
   "author": "Gregor Wolf",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@ui5/cli": "^3.9.1",
+    "react-router-dom": "^6.22.3"
+  }
 }

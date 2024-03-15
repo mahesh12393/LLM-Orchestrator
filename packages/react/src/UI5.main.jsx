@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { ReactFlowContext } from "./context/ReactFlowContext.jsx";
+import { ThemeProvider } from '@ui5/webcomponents-react';
+
 
 function onThemeChanged(sTheme) {
   //Call central theme change function on App.jsx so it will serve standalone app and nested app
@@ -17,7 +19,9 @@ export function loadReact(params) {
   );
   root.render(
     <ReactFlowContext>
+      <ThemeProvider>
       <App generateConfig={params.generateConfig} nodeData={params.nodeData} />
+      </ThemeProvider>
     </ReactFlowContext>
   );
   return () => {
